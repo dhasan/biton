@@ -15,8 +15,12 @@
 		<constructor-arg type = "boolean" value = "true"/>
 	</bean>
 	
-	<bean name="mainmodel" class="com.tr.biton.model.MainModel" scope="singleton">
+	<bean name="escrowcoinservice" class="com.tr.biton.service.EscrowCoinServiceImpl" scope="singleton">
 		<constructor-arg ref="bitcoin" />
+	</bean>
+	
+	<bean name="mainmodel" class="com.tr.biton.model.MainModel" scope="singleton">
+		<constructor-arg ref="escrowcoinservice" />
 	</bean>
 	 
 	<context:component-scan base-package="com.tr.biton.controller" />

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 
@@ -18,7 +19,7 @@ public class EscrowContractEntry implements Serializable {
 	public static final Integer BUYER = 	1;
 	public static final Integer SELLER = 	2;
 	
-	private String multisigAddress;
+	private Address multisigAddress;
 	private byte[] hash160;
 	private HashSet<byte[]> transactions;
 	private byte[] redeemScript;
@@ -63,11 +64,11 @@ public class EscrowContractEntry implements Serializable {
 	}
 	
 	public void addBalance(Coin by){
-		balance.add(by);
+		balance = balance.add(by);
 	}
 	
 	public void subtractBalance(Coin by){
-		balance.subtract(by);
+		balance = balance.subtract(by);
 	}
 	
 	public Coin getBalance() {
@@ -125,13 +126,14 @@ public class EscrowContractEntry implements Serializable {
 	public void setTransactions(HashSet<byte[]> transactions) {
 		this.transactions = transactions;
 	}
-
-	public String getMultisigAddress() {
+	
+	public Address getMultisigAddress() {
 		return multisigAddress;
 	}
 
-	public void setMultisigAddress(String multisigAddress) {
+	public void setMultisigAddress(Address multisigAddress) {
 		this.multisigAddress = multisigAddress;
 	}
+
 	
 }

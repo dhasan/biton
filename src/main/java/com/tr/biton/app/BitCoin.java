@@ -1,18 +1,23 @@
 package com.tr.biton.app;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
+import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.params.TestNet3Params;
@@ -184,6 +189,37 @@ public class BitCoin {
 		return contractmap;	
 		
 	}
+	
+	public Wallet createWatchOnlyWalletFromXPUB(String xpubstr)
+			throws AddressFormatException {
+		DeterministicKey dkey;
+		Wallet w;
+		byte[] xpubBytes = Base58.decodeChecked(xpubstr);
+		ByteBuffer bb = ByteBuffer.wrap(xpubBytes);
+		int version = bb.getInt();
+		if ((version != 0x0488B21E) && (params instanceof MainNetParams)) {
+			throw new AddressFormatException("invalid xpub version");
+        }else if ((version != 0x043587CF) && (params instanceof TestNet3Params)){
+        	throw new AddressFormatException("invalid tpub version");
+        }
+
+		byte[] chain = new byte[32];
+		byte[] pub = new byte[33];
+		// depth:
+		bb.get();
+		// parent fingerprint:
+		bb.getInt();
+		// child no.
+		bb.getInt();
+		bb.get(chain);
+		bb.get(pub);
+		dkey =  HDKeyDerivation.createMasterPubKeyFromBytes(pub, chain);
+	
+		w = Wallet.fromWatchingKey(params, dkey);
+		logger.info("..............................................: "+w.currentReceiveAddress().toString());
+		return w;
+}
+
 	
 	static public byte[] hexStringToByteArray(String s) {
 	    int len = s.length();

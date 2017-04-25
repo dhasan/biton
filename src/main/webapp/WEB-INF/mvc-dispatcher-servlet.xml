@@ -2,17 +2,20 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 	
 	<bean name="bitcoin" class="com.tr.biton.app.BitCoin" scope = "singleton">
 		<constructor-arg type = "java.lang.String" value = "biton"/>
-		<constructor-arg type = "boolean" value = "true"/>
+		<constructor-arg type = "boolean" value = "false"/>
 	</bean>
 	
 	<bean name="escrowcoinservice" class="com.tr.biton.service.EscrowCoinServiceImpl" scope="singleton">
@@ -33,6 +36,42 @@
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost:5433/biton" />
+		<property name="username" value="postgres" />
+		<property name="password" value="4260" />
+	</bean>
+	
+	<bean id="hibernate4AnnotatedSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.tr.biton.orm.Wallet</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="walletDAO" class="com.tr.biton.dao.WalletDAOImpl">
+		<property name="sessionFactory"	ref="hibernate4AnnotatedSessionFactory"	/>
+	</bean>
+	<bean id="walletService" class="com.tr.biton.service.WalletServiceImpl">
+		<property name="walletDAO" ref="walletDAO"></property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</bean>
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />

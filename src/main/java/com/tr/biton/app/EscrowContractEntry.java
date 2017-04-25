@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 
 import com.tr.biton.interfaces.EscrowContractObserver;
 
@@ -20,8 +21,8 @@ public class EscrowContractEntry implements Serializable {
 	public static final Integer SELLER = 	2;
 	
 	private Address multisigAddress;
-	private byte[] hash160;
-	private HashSet<byte[]> transactions;
+	//private byte[] hash160;
+	private HashSet<Transaction> transactions;
 	private byte[] redeemScript;
 	private byte[] script;
 	private HashMap<Integer, ECKey> keys;
@@ -57,7 +58,7 @@ public class EscrowContractEntry implements Serializable {
 
 	public EscrowContractEntry(){
 		
-		transactions = new HashSet<byte[]>();
+		transactions = new HashSet<Transaction>();
 		keys = new HashMap<Integer, ECKey>();
 		signs = new HashMap<Integer, byte[]>();
 		balance = Coin.ZERO;
@@ -83,13 +84,13 @@ public class EscrowContractEntry implements Serializable {
 		keys.put(keyid, key);
 	}
 	
-	public byte[] getHash160() {
-		return hash160;
-	}
-
-	public void setHash160(byte[] hash160) {
-		this.hash160 = hash160;
-	}
+//	public byte[] getHash160() {
+//		return hash160;
+//	}
+//
+//	public void setHash160(byte[] hash160) {
+//		this.hash160 = hash160;
+//	}
 
 	public byte[] getRedeemScript() {
 		return redeemScript;
@@ -111,19 +112,19 @@ public class EscrowContractEntry implements Serializable {
 		return keys;
 	}
 
-	public void addTransaction(byte[] tx){
+	public void addTransaction(Transaction tx){
 		transactions.add(tx);
 	}
 	
-	public void removeTransaction(byte[] tx){
+	public void removeTransaction(Transaction tx){
 		transactions.remove(tx);
 	}	
 	
-	public HashSet<byte[]> getTransactions() {
+	public HashSet<Transaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(HashSet<byte[]> transactions) {
+	public void setTransactions(HashSet<Transaction> transactions) {
 		this.transactions = transactions;
 	}
 	

@@ -1,9 +1,14 @@
 package com.tr.biton.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +21,7 @@ import com.tr.biton.interfaces.EscrowContractObserver;
 
 
 //@Service
-public class EscrowCoinServiceImpl implements EscrowCoinService{
+public class EscrowCoinServiceImpl implements EscrowCoinService, Serializable{
 	
 	private BitCoin bitcoin;
 	
@@ -34,6 +39,11 @@ public class EscrowCoinServiceImpl implements EscrowCoinService{
 		
 		return w;
 	
+	}
+	
+	//TODO: Create separette watchonly class 
+	public Wallet createWatchOnlyWalletFromXPUB(String xpub){
+		return bitcoin.createWatchOnlyWalletFromXPUB(xpub);
 	}
 	
 	public void deleteEscrowContract(Wallet w, Address address){
@@ -77,6 +87,8 @@ public class EscrowCoinServiceImpl implements EscrowCoinService{
 			}
 			
 		});
+		
+	
 	}
 	
 	public String toString(Wallet w){
@@ -88,7 +100,30 @@ public class EscrowCoinServiceImpl implements EscrowCoinService{
 	public String toString(Wallet w, Address address){
 		EscrowContractExtention ext;
 		ext = (EscrowContractExtention) w.getExtensions().get("com.tr.biton.app.EscrowContractExtention");
+
 		return ext.toString(address);
+	}
+	
+	public void saveEscrowWallet(Wallet w,File f){
+		try {
+			w.saveToFile(f);
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Wallet restoreEscrowWallet(String fname){
+		Wallet w = null;
+		try {
+			w = Wallet.loadFromFile(new File(fname));
+		} catch (UnreadableWalletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return w;
 	}
 	
 	

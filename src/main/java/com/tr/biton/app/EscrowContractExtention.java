@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,13 +39,18 @@ import com.google.common.util.concurrent.Futures;
 import com.tr.biton.interfaces.EscrowContractObserver;
 
 public class EscrowContractExtention implements WalletExtension{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	final Logger logger = LoggerFactory.getLogger(EscrowContractExtention.class);
 	
-	private Wallet containingWallet;
-	private PeerGroup peers;
-	private Context context;
-	private NetworkParameters params;
-	private BlockChain chain;
+	private transient Wallet containingWallet;
+	private transient PeerGroup peers;
+	private transient Context context;
+	private transient NetworkParameters params;
+	private transient BlockChain chain;
 	public BlockChain getChain() {
 		return chain;
 	}
@@ -100,7 +106,7 @@ public class EscrowContractExtention implements WalletExtension{
 	public void addListeners(Wallet containingWallet, 
 			final Context context, 
 			NetworkParameters params, 
-			BlockChain chain,
+			final BlockChain chain,
 			PeerGroup peers,
 			int confor){
 		this.containingWallet = containingWallet;
@@ -138,14 +144,16 @@ public class EscrowContractExtention implements WalletExtension{
 					if (entry!=null){
 						if ((tx.getConfidence().getConfidenceType()==ConfidenceType.BUILDING) ||
 								(tx.getConfidence().getConfidenceType()==ConfidenceType.PENDING)){
-							entry.addTransaction(tx.getHash().getBytes());
+							entry.addTransaction(tx);
 							entry.addBalance(amount);
-					
+							
+							logger.info(BitCoin.byteArrayToHex(tx.bitcoinSerialize()));
 							obs = entry.getObserverbs();
 							if (obs!=null)
 								obs.Funded(adr.toString(), amount, newBalance);
 						}else{ //corrupted
-							entry.removeTransaction(tx.getHash().getBytes());
+							//todo check if tx exist
+							entry.removeTransaction(tx);
 							entry.subtractBalance(amount);
 							obs = entry.getObserverbs();
 //							if (obs!=null)
@@ -158,7 +166,7 @@ public class EscrowContractExtention implements WalletExtension{
 			public void onCoinsReceived(final Wallet wallet, final Transaction tx, final Coin prevBalance, final Coin newBalance) {
 				// TODO Auto-generated method stub
 				Context.propagate(context);
-				
+						
 				if (conformations<0){
 					broadcast(wallet,tx,prevBalance, newBalance);
 				}else{
@@ -196,18 +204,18 @@ public class EscrowContractExtention implements WalletExtension{
 	public void createSpend(String contract, String toaddress, Coin amount){
 		Transaction spendTx = new Transaction(params);
 		EscrowContractEntry entry = entries.get(contract);
-		HashSet<byte[]> txset = entry.getTransactions();
-		Sha256Hash sha256tx;
+		//HashSet<byte[]> txset = entry.getTransactions();
+		//Sha256Hash sha256tx;
 		ScriptBuilder scriptBuilder = new ScriptBuilder();
 		boolean found = false;
 		TransactionInput input;
-		byte[] selectedtx = null;
+		Transaction selectedtx = null;
 		int outid=0;
 		Context.propagate(context);
-		for (byte[] txraw : txset){
-			sha256tx = Sha256Hash.wrap(txraw);
+		for (Transaction tx : entry.getTransactions()){
+			//sha256tx = Sha256Hash.wrap(txraw);
 			
-			for (TransactionOutput txo : containingWallet.getTransaction(sha256tx).getOutputs()){
+			for (TransactionOutput txo : tx.getOutputs()){
 				if (   	!(txo.getAddressFromP2PKHScript(params).toString().equals(contract)) &&
 						!(txo.getAddressFromP2SH(params).toString().equals(contract))){
 					continue;
@@ -217,7 +225,7 @@ public class EscrowContractExtention implements WalletExtension{
 					if (txo.isAvailableForSpending()){
 						if (txo.getValue().isGreaterThan(amount)){
 							scriptBuilder.data(txo.getScriptBytes()); //
-							selectedtx = txraw;
+							selectedtx = tx;
 							outid = txo.getIndex();
 							found = true;
 							break;
@@ -228,7 +236,7 @@ public class EscrowContractExtention implements WalletExtension{
 					if (txo.isAvailableForSpending()){
 						if (txo.getValue().isGreaterThan(amount)){ //TTODO: Check for fee
 							scriptBuilder.data(txo.getScriptBytes()); //
-							selectedtx = txraw;
+							selectedtx = tx;
 							outid = txo.getIndex();
 							found = true;
 							break;
@@ -241,7 +249,7 @@ public class EscrowContractExtention implements WalletExtension{
 		}
 		
 		if (found==true){
-			input = spendTx.addInput(Sha256Hash.wrap(selectedtx), outid, scriptBuilder.build());
+			input = spendTx.addInput(selectedtx.getHash(), outid, scriptBuilder.build());
 			
 			// Add outputs to the person receiving bitcoins
 
@@ -263,6 +271,7 @@ public class EscrowContractExtention implements WalletExtension{
 		Context.propagate(context);
 		EscrowContractEntry entry = entries.get(address.toString());
 		entry.setObserver(obs);
+
 	}
 	
 	public Address createEscrowContract(ECKey escrow, ECKey buyer, ECKey seller){
@@ -282,7 +291,7 @@ public class EscrowContractExtention implements WalletExtension{
 		entry.setScript(script.getProgram());
 		entry.setRedeemScript(redeemScript.getProgram());
 		entry.setMultisigAddress(multisig);
-		entry.setHash160(multisig.getHash160());
+		//entry.setHash160(multisig.getHash160());
 		entries.put(multisig.toString(), entry);
 		
 		List<Script> scripts = new ArrayList<Script>();
@@ -292,13 +301,7 @@ public class EscrowContractExtention implements WalletExtension{
 		//containingWallet.addWatchedAddress(new Address(params,multisig.getHash160()));
 		
 		return  multisig;
-			
-		//logger.debug("Multisig address: " + multisig.toString());
-		//contractmap.put(MULTISIG_ADDRESS, multisig.toString());
-		//contractmap.put(REDEEM_SCRIPT, byteArrayToHex(redeemScript.getProgram()));
-		//contractmap.put(MULTISIG_HASH160, byteArrayToHex(multisig.getHash160()));
-		//contractmap.put(SCRIPT, byteArrayToHex(script.getProgram()));
-		
+				
 	}
 
 	public String getWalletExtensionID() {
@@ -308,39 +311,29 @@ public class EscrowContractExtention implements WalletExtension{
 
 	public boolean isWalletExtensionMandatory() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	public byte[] serializeWalletExtension() {
 		// TODO Auto-generated method stub
-		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		ByteArrayOutputStream fos = new ByteArrayOutputStream();
+		ObjectOutputStream oos;
 		try {
-			ObjectOutputStream o = new ObjectOutputStream(b);
-			o.writeObject(this);
-			return b.toByteArray();
-		} catch (IOException e) {
+			oos = new ObjectOutputStream(fos);
+			Transaction tt = new Transaction(params);
+			oos.writeObject(tt);
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			logger.error("Unable to serialize object");
-			e.printStackTrace();
-			return null;
+			e1.printStackTrace();
 		}
+	
+		
+		return fos.toByteArray();
 	}
 
 	public void deserializeWalletExtension(Wallet containingWallet, byte[] data) throws Exception {
 		// TODO Auto-generated method stub
-		ByteArrayInputStream b = new ByteArrayInputStream(data);
-		ObjectInputStream o = new ObjectInputStream(b);
-		EscrowContractExtention ext = (EscrowContractExtention) o.readObject();
-		ext.addListeners(containingWallet, ext.getContext(), 
-				ext.getParams(), 
-				ext.getChain(), 
-				ext.getPeers(),
-				ext.getConformations());
-		
-		containingWallet.addExtension(ext);
-		
-		this.containingWallet = containingWallet;
-		
+			
 	}
 	
 	public String toString(){
@@ -366,7 +359,7 @@ public class EscrowContractExtention implements WalletExtension{
 		EscrowContractEntry ent = entries.get(address.toString());
 		String str=new String();
 		Coin send,receive;
-		Transaction tx;
+		//Transaction tx;
 		
 		str +="\n";
 		str +=StringUtils.repeat("-",122) +"\n";
@@ -377,10 +370,10 @@ public class EscrowContractExtention implements WalletExtension{
 		int sendcnt=0;
 		int reccnt =0;
 		Coin sendsum= Coin.valueOf(0), receivesum =Coin.valueOf(0);
-		for(byte[] txbytes: ent.getTransactions()){
+		for(Transaction tx: ent.getTransactions()){
 			send = Coin.valueOf(0);//.ZERO;
 			receive = Coin.valueOf(0);
-			tx = containingWallet.getTransaction(Sha256Hash.wrap(txbytes));
+			//tx = containingWallet.getTransaction(Sha256Hash.wrap(txbytes));
 			sendcnt = 0;reccnt=0;
 			for(TransactionOutput txo: tx.getOutputs()){
 //				if 	( 
@@ -446,7 +439,7 @@ public class EscrowContractExtention implements WalletExtension{
 			if (receive.isGreaterThan(Coin.ZERO))
 				rst = receive.toFriendlyString() +" "+Integer.toString(reccnt);
 			
-			str += "| "+StringUtils.leftPad(BitCoin.byteArrayToHex(txbytes), 64)+" | "+StringUtils.leftPad(rst, 16)+" | "+StringUtils.leftPad(sst, 16) + " | "+StringUtils.leftPad(co, 13)+" |\n";
+			str += "| "+StringUtils.leftPad(tx.getHashAsString(), 64)+" | "+StringUtils.leftPad(rst, 16)+" | "+StringUtils.leftPad(sst, 16) + " | "+StringUtils.leftPad(co, 13)+" |\n";
 		}
 		str +=StringUtils.repeat("-",122) +"\n";	
 		str +="| "+StringUtils.leftPad("Address Balance: "+ent.getBalance().toFriendlyString(), 64)+" | "+StringUtils.leftPad(receivesum.toFriendlyString(), 16)+" | "+StringUtils.leftPad(sendsum.toFriendlyString(), 16)+" | "+StringUtils.leftPad(receivesum.subtract(sendsum).toFriendlyString(), 13) + " |\n";

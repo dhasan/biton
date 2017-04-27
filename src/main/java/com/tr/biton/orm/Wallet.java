@@ -2,7 +2,9 @@ package com.tr.biton.orm;
 
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,7 +14,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnTransformer;
+
 import javax.persistence.JoinColumn;
 
 enum WalletType{
@@ -37,9 +43,15 @@ public class Wallet {
 	private String name;	
 
 	@Column(name = "xprv" ,unique = true)
+	@ColumnTransformer(
+	          read="pgp_sym_decrypt(name::bytea, 'mySecretKey')", 
+	          write="pgp_sym_encrypt(?, 'mySecretKey')")
 	private String xprv;
 	
 	@Column(name = "xpub" ,unique = true)
+	@ColumnTransformer(
+	          read="pgp_sym_decrypt(name::bytea, 'mySecretKey')", 
+	          write="pgp_sym_encrypt(?, 'mySecretKey')")
 	private String xpub;
 	
 	@Column(name = "derive")
@@ -47,15 +59,25 @@ public class Wallet {
 	
 	@Column(name = "lastindex")
 	private int lastindex;
-//	
-//	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	@JoinTable(name = "wallet_transaction",
-//		joinColumns = { 
-//				@JoinColumn(name = "wallet_id", nullable = false, updatable = false) 
-//		},inverseJoinColumns = { 
-//				@JoinColumn(name = "transaction_id", nullable = false, updatable = false) 
-//		})
-//	private Set<Transaction> transactions;
+	
+	@Column(name = "threshold")
+	private int threshold;
+	
+	@ElementCollection
+	@CollectionTable(name = "wallet_externalAddresses")
+	private Set<String> externalAddresses;
+	
+	@Column(name = "payload")
+	private byte[] payload;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "wallet_transaction",
+		joinColumns = { 
+				@JoinColumn(name = "wallet_id") 
+		},inverseJoinColumns = { 
+				@JoinColumn(name = "transaction_id") 
+		})
+	private Set<Transaction> transactions;
 
 	public int getId() {
 		return id;
@@ -113,8 +135,41 @@ public class Wallet {
 		this.lastindex = lastindex;
 	}
 	
+	public byte[] getPayload() {
+		return payload;
+	}
+
+	public void setPayload(byte[] payload) {
+		this.payload = payload;
+	}
+
+	public Set<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Set<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public int getThreshold() {
+		return threshold;
+	}
+
+	public void setThreshold(int threshold) {
+		this.threshold = threshold;
+	}
+
+	public Set<String> getExternalAddresses() {
+		return externalAddresses;
+	}
+
+	public void setExternalAddresses(Set<String> externalAddresses) {
+		this.externalAddresses = externalAddresses;
+	}
+	
 	public String toString(){
 		return "{id: "+id+", name:"+name+", type:"+wallettype+", derive:"+derive+"}";
 	}
+	
 	
 }

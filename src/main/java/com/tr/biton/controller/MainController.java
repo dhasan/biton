@@ -38,10 +38,23 @@ public class MainController{
 	public String dve(ModelMap model) {
 		//HashMap<Integer, String> contractmap;
 		
+//		com.tr.biton.orm.Wallet w = new com.tr.biton.orm.Wallet();
+//		w.setName("testnamee");
+//		walletservice.addWallet(w);
+		
+		
+		return "WelcomePage";
+	}
+	
+	
+	@RequestMapping(value="/en/2")
+	public String dveen(ModelMap model) {
+		//HashMap<Integer, String> contractmap;
+		
 		com.tr.biton.orm.Wallet w = new com.tr.biton.orm.Wallet();
 		w.setName("testnamee");
 		walletservice.addWallet(w);
-		
+		logger.info("dddddddddddddddddddddddddd");
 		
 		return "WelcomePage";
 	}

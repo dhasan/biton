@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@DiscriminatorValue("LOCALTYPE")
-@Table(name="LOCALPAYMENT")
+@DiscriminatorValue("localtype")
+@Table(name="localpayments")
 public class LocalPayment extends Payment {
 
 }

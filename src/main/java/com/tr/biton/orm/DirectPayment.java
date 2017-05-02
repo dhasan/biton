@@ -6,11 +6,21 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@DiscriminatorValue("DIRECTTYPE")
-@Table(name="DIRECTPAYMENT")
+@DiscriminatorValue("directtype")
+@Table(name="directpayments")
 public class DirectPayment extends Payment {
 	
 	@Column(name="directaddress")
 	private String directaddress;
+
+	public String getDirectaddress() {
+		return directaddress;
+	}
+
+	public void setDirectaddress(String directaddress) {
+		this.directaddress = directaddress;
+	}
+	
+	
 
 }

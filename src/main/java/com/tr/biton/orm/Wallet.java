@@ -1,6 +1,8 @@
 package com.tr.biton.orm;
 
+import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -77,13 +79,13 @@ public class Wallet {
 		},inverseJoinColumns = { 
 				@JoinColumn(name = "transaction_id") 
 		})
-	private Set<Transaction> transactions;
+	private List<Transaction> transactions;
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void ListId(int id) {
 		this.id = id;
 	}
 
@@ -91,7 +93,7 @@ public class Wallet {
 		return wallettype;
 	}
 
-	public void setWallettype(WalletType wallettype) {
+	public void ListWallettype(WalletType wallettype) {
 		this.wallettype = wallettype;
 	}
 	
@@ -107,7 +109,7 @@ public class Wallet {
 		return xprv;
 	}
 
-	public void setXprv(String xprv) {
+	public void ListXprv(String xprv) {
 		this.xprv = xprv;
 	}
 
@@ -115,7 +117,7 @@ public class Wallet {
 		return xpub;
 	}
 
-	public void setXpub(String xpub) {
+	public void ListXpub(String xpub) {
 		this.xpub = xpub;
 	}
 
@@ -123,7 +125,7 @@ public class Wallet {
 		return derive;
 	}
 
-	public void setDerive(String derive) {
+	public void ListDerive(String derive) {
 		this.derive = derive;
 	}
 
@@ -131,7 +133,7 @@ public class Wallet {
 		return lastindex;
 	}
 
-	public void setLastindex(int lastindex) {
+	public void ListLastindex(int lastindex) {
 		this.lastindex = lastindex;
 	}
 	
@@ -139,15 +141,15 @@ public class Wallet {
 		return payload;
 	}
 
-	public void setPayload(byte[] payload) {
+	public void ListPayload(byte[] payload) {
 		this.payload = payload;
 	}
 
-	public Set<Transaction> getTransactions() {
+	public List<Transaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(Set<Transaction> transactions) {
+	public void ListTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
 
@@ -155,7 +157,7 @@ public class Wallet {
 		return threshold;
 	}
 
-	public void setThreshold(int threshold) {
+	public void ListThreshold(int threshold) {
 		this.threshold = threshold;
 	}
 
@@ -163,7 +165,7 @@ public class Wallet {
 		return externalAddresses;
 	}
 
-	public void setExternalAddresses(Set<String> externalAddresses) {
+	public void ListExternalAddresses(Set<String> externalAddresses) {
 		this.externalAddresses = externalAddresses;
 	}
 	

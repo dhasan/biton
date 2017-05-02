@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @DiscriminatorValue("PCHANNELTYPE")
-@Table(name="PAYMENTCHANNEL")
+@Table(name="PAYMENTCHANNELS")
 public class PaymentChannelPayment extends Payment{
 
 	

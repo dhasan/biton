@@ -2,6 +2,9 @@ package com.tr.biton.dao;
 
 
 import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -10,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.tr.biton.orm.Transaction;
 import com.tr.biton.orm.Wallet;
 
 @Repository
@@ -22,6 +26,10 @@ public class WalletDAOImpl implements WalletDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
 	@Override
 	public void addWallet(Wallet w)	{
 		Session	session	= this.sessionFactory.getCurrentSession();
@@ -41,7 +49,7 @@ public class WalletDAOImpl implements WalletDAO {
 	@Override
 	public List<Wallet> listWallets() {
 		Session	session	=	this.sessionFactory.getCurrentSession();
-		List<Wallet> walletsList = session.createQuery("from WALLETS").list();
+		List<Wallet> walletsList = session.createQuery("from WALLETS").getResultList();
 		for	(Wallet p : walletsList) {
 			logger.info("Wallet List::" + p);
 		}
@@ -59,9 +67,11 @@ public class WalletDAOImpl implements WalletDAO {
 	@Override
 	public Wallet getWalletByName(String name){
 		Session session = this.sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from WALLETS where name = :name ");
-		query.setParameter("name", name);
-		List<Wallet> list = query.list();
+		//Query query = session.createQuery("from WALLETS where name = :name ");
+		//query.setParameter("name", name);
+		//List<Wallet> list = query.list();
+		EntityManager entityManager = session.getEntityManagerFactory().createEntityManager();
+		List<Wallet> list = entityManager.createQuery( "from Event", Wallet.class ).getResultList();
 		if (list.size()==0)
 			return null;
 		else if (list.size()>1){
@@ -69,6 +79,29 @@ public class WalletDAOImpl implements WalletDAO {
 			return (Wallet)list.get(0);
 		}else
 			return (Wallet)list.get(0);
+	}
+	
+	@Override
+	public void addWalletTransaction(Wallet w, Transaction tx){
+		Session session = this.sessionFactory.getCurrentSession();
+		
+		w.getTransactions().add(tx);
+		session.persist(tx);
+		logger.info("New transaction added to wallet");
+	}
+	@Override
+	public void addWalletExternalAddress(Wallet w, String eaddress){
+		Session session = this.sessionFactory.getCurrentSession();
+		//session.persist(eaddress);
+		w.getExternalAddresses().add(eaddress);
+		session.update(w);	
+	}
+	@Override
+	public void removeWalletExternalAddress(Wallet w, String address){
+		Session session = this.sessionFactory.getCurrentSession();
+		w.getExternalAddresses().remove(address);
+	//	session.delete(address);
+		session.update(w);		
 	}
 	
 }

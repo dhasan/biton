@@ -20,27 +20,45 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>4.1.4.RELEASE</version>
+			<version>4.3.8.RELEASE</version>
 		</dependency>
 		
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot</artifactId>
-    		<version>1.5.2.RELEASE</version>
+    		<version>1.5.3.RELEASE</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>4.1.4.RELEASE</version>
+			<version>4.3.8.RELEASE</version>
 		</dependency>
  
     	<!-- Spring MVC framework --> 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>4.1.4.RELEASE</version>
+			<version>4.3.8.RELEASE</version>
 		</dependency>
+		
+			<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>4.3.8.RELEASE</version>
+		</dependency>
+		
+		 <dependency>
+  <groupId>org.springframework</groupId>
+   <artifactId>spring-tx</artifactId>
+    <version>4.3.8.RELEASE</version>
+   </dependency>
+		
+		 <dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-core</artifactId>
+   <version>4.3.8.RELEASE</version>
+</dependency>
 	
 		<!-- JSTL --> 
 		<dependency>
@@ -48,11 +66,17 @@
 			<artifactId>jstl</artifactId>
 			<version>1.1.2</version>
 		</dependency>
+		
+		<dependency>
+  <groupId>javax.transaction</groupId>
+  <artifactId>jta</artifactId>
+  <version>1.1</version>
+</dependency>
 	
 		<dependency>
     		<groupId>javax.servlet</groupId>
     		<artifactId>javax.servlet-api</artifactId>
-    		<version>3.0.1</version>
+    		<version>3.1.0</version>
     		<scope>provided</scope>
 		</dependency>
 	
@@ -107,18 +131,19 @@
 	<version>1.4</version>
 </dependency>
 
-<dependency>
-	<groupId>org.springframework</groupId>
-	<artifactId>spring-orm</artifactId>
-	<version>4.1.4.RELEASE</version>
-</dependency>
 
 <dependency>
 	<groupId>org.springframework</groupId>
 	<artifactId>spring-tx</artifactId>
-	<version>4.1.4.RELEASE</version>
+	<version>4.3.8.RELEASE</version>
 </dependency>
 
+  <dependency>
+    <groupId>com.goshippo</groupId>
+    <artifactId>shippo-java-client</artifactId>
+    <version>1.1.4</version>
+</dependency>
+    
 <dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
@@ -128,19 +153,19 @@
 <dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.1.0.Final</version>
+			<version>5.2.0.Final</version>
 		</dependency>
 								
 <!-- Hibernate -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.3.5.Final</version>
+			<version>5.2.10.Final</version>
 		</dependency>
 		<dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-entitymanager</artifactId>
-    <version>4.3.5.Final</version>
+    <version>5.2.10.Final</version>
 </dependency>
 		
   	</dependencies>
@@ -151,7 +176,7 @@
   			<plugin>
   				<groupId>org.apache.tomcat.maven</groupId>
   				<artifactId>tomcat7-maven-plugin</artifactId>
-  				<version>2.1</version>
+  				<version>2.2</version>
   				<configuration>
     				<path>/</path>
   				</configuration>

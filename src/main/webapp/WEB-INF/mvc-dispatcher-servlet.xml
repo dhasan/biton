@@ -5,13 +5,13 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<bean name="bitcoin" class="com.tr.biton.app.BitCoin" scope = "singleton">
 		<constructor-arg type = "java.lang.String" value = "biton"/>
@@ -45,21 +45,39 @@
 		<property name="password" value="4260" />
 	</bean>
 	
-	<bean id="hibernate4AnnotatedSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="hibernate4AnnotatedSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
 				<value>com.tr.biton.orm.Wallet</value>
 				<value>com.tr.biton.orm.Transaction</value>
 				<value>com.tr.biton.orm.TxOutput</value>
+				<value>com.tr.biton.orm.DirectPayment</value>
+				<value>com.tr.biton.orm.EscrowPayment</value>
+				<value>com.tr.biton.orm.LocalPayment</value>
+				<value>com.tr.biton.orm.Order</value>
+				<value>com.tr.biton.orm.Payment</value>
+				<value>com.tr.biton.orm.PaymentChannelPayment</value>
+				<value>com.tr.biton.orm.Product</value>
+				<value>com.tr.biton.orm.Transaction</value>
 				<value>com.tr.biton.orm.TxInput</value>
+				<value>com.tr.biton.orm.TxOutput</value>
+				<value>com.tr.biton.orm.User</value>
+				<value>com.tr.biton.orm.Location</value>	
+				<value>com.tr.biton.orm.Address</value>	
+				<value>com.tr.biton.orm.OrderMessage</value>	
+				<value>com.tr.biton.orm.Parcel</value>		
+				<value>com.tr.biton.orm.Shipment</value>	
+				<value>com.tr.biton.orm.Category</value>			
+				
 			</list>
 		</property>
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<!--  <prop key="hibernate.hbm2ddl.import_files">initiallocations.sql</prop> -->
 			</props>
 		</property>
 	</bean>
@@ -70,10 +88,14 @@
 	<bean id="walletService" class="com.tr.biton.service.WalletServiceImpl">
 		<property name="walletDAO" ref="walletDAO"></property>
 	</bean>
+	
+	<bean id="userDAO" class="com.tr.biton.dao.UserDAOImpl">
+		<property name="sessionFactory"	ref="hibernate4AnnotatedSessionFactory"	/>
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</bean>
 

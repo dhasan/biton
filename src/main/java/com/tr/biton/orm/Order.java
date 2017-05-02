@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,14 +16,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 enum PAYFOR {
 	ITEMS,
 	CARGO,
 	FEE
 }
+
+@Entity
+@Table(name="orders")
 public class Order {
 	
 	@Id
@@ -32,6 +38,9 @@ public class Order {
 	
 	@ManyToMany(mappedBy="orders")
 	private List<User> users;
+	
+	@Column(name="test")
+	private String test;
 	
 	@OneToOne(mappedBy="order", cascade = CascadeType.ALL)
 	private Payment payment;
@@ -50,14 +59,71 @@ public class Order {
 	private List<Double> volumes;
 	
 	@ElementCollection
-	@CollectionTable(name = "order_requestedpayments")
-    @MapKey(name = "payfor")
-    @MapKeyEnumerated
+	@MapKeyEnumerated
+    @CollectionTable(name="order_requestedpayments")
     private Map<PAYFOR, Long> requestedpayments;
 
-	@OneToOne(mappedBy="order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Shipment shipment;
-	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	public List<Double> getVolumes() {
+		return volumes;
+	}
+
+	public void setVolumes(List<Double> volumes) {
+		this.volumes = volumes;
+	}
+
+	public Map<PAYFOR, Long> getRequestedpayments() {
+		return requestedpayments;
+	}
+
+	public void setRequestedpayments(Map<PAYFOR, Long> requestedpayments) {
+		this.requestedpayments = requestedpayments;
+	}
+
+	public String getTest() {
+		return test;
+	}
+
+	public void setTest(String test) {
+		this.test = test;
+	}
+
+//	@OneToOne(mappedBy="order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	private Shipment shipment;
+//	
 	@OneToMany(mappedBy="order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<OrderMessage> ordermessages;
+	
+	
 }

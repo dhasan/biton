@@ -23,7 +23,7 @@ import javax.persistence.OneToOne;
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="payment_type")
-@Table(name="PAYMENT")
+@Table(name="PAYMENTS")
 public abstract class Payment {
 	
 	@Id
@@ -53,6 +53,54 @@ public abstract class Payment {
 	
 	@Column(name="receivedmoney")
 	private long receivedmoney;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public boolean isPayed() {
+		return payed;
+	}
+
+	public void setPayed(boolean payed) {
+		this.payed = payed;
+	}
+
+	public Date getTimeoutdate() {
+		return timeoutdate;
+	}
+
+	public void setTimeoutdate(Date timeoutdate) {
+		this.timeoutdate = timeoutdate;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public long getReceivedmoney() {
+		return receivedmoney;
+	}
+
+	public void setReceivedmoney(long receivedmoney) {
+		this.receivedmoney = receivedmoney;
+	}
 	
 	
 	

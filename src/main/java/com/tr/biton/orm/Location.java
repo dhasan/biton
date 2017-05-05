@@ -21,7 +21,7 @@ public class Location {
 	private String iso;
 	
 	@Size(max=3)
-	@Column(name="iso3")
+	@Column(name="iso3", nullable=true)
 	private String iso3;
 	
 	@Column(name="name")
@@ -30,8 +30,8 @@ public class Location {
 	@Column(name="nicename")
 	private String nicename;
 	
-	@Column(name="numcode")
-	private int numcode;
+	@Column(name="numcode", nullable=true)
+	private Integer numcode;
 	
 	@Column(name="phonecode")
 	private int phonecode;
@@ -88,11 +88,11 @@ public class Location {
 		this.nicename = nicename;
 	}
 
-	public int getNumcode() {
+	public Integer getNumcode() {
 		return numcode;
 	}
 
-	public void setNumcode(int numcode) {
+	public void setNumcode(Integer numcode) {
 		this.numcode = numcode;
 	}
 

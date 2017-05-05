@@ -14,7 +14,7 @@
   
   <servlet-mapping>
  	<servlet-name>mvc-dispatcher</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/mvc/*</url-pattern>
   </servlet-mapping>
  <!-- 
    <context-param>
@@ -28,12 +28,20 @@
     </listener-class>
   </listener>
  -->
- <filter>
-	<filter-name>ModifyRequestObjectFilter</filter-name>
-	<filter-class>com.tr.biton.app.ModifyRequestObjectFilter</filter-class>
-</filter>
-<filter-mapping>
-	<filter-name>ModifyRequestObjectFilter</filter-name>
-	<url-pattern>/*</url-pattern>
-</filter-mapping>
+ <listener>
+ <listener-class>
+        org.springframework.web.context.request.RequestContextListener
+ </listener-class>
+</listener>
+<!-- 
+	<filter>
+		<filter-name>paginationFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>paginationFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+-->
+
 </web-app>

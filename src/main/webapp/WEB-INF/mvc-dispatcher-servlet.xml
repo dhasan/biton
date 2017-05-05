@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -10,12 +11,14 @@
         http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<bean name="bitcoin" class="com.tr.biton.app.BitCoin" scope = "singleton">
 		<constructor-arg type = "java.lang.String" value = "biton"/>
-		<constructor-arg type = "boolean" value = "false"/>
+		<constructor-arg type = "boolean" value = "true"/>
 	</bean>
 	
 	<bean name="escrowcoinservice" class="com.tr.biton.service.EscrowCoinServiceImpl" scope="singleton">
@@ -76,7 +79,8 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.format_sql">true</prop>
+			<!-- <prop key="hibernate.hbm2ddl.auto">create</prop> -->
 				<!--  <prop key="hibernate.hbm2ddl.import_files">initiallocations.sql</prop> -->
 			</props>
 		</property>
@@ -92,6 +96,17 @@
 	<bean id="userDAO" class="com.tr.biton.dao.UserDAOImpl">
 		<property name="sessionFactory"	ref="hibernate4AnnotatedSessionFactory"	/>
 	</bean>
+	
+	
+	<bean id="locationDAO" class="com.tr.biton.dao.LocationDAOImpl">
+		<property name="sessionFactory"	ref="hibernate4AnnotatedSessionFactory"	/>
+		
+	</bean>
+	
+	<bean id="locationService" class="com.tr.biton.service.LocationServiceImpl">
+		<property name="locationDAO" ref="locationDAO"></property>
+		
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
@@ -99,6 +114,7 @@
 		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</bean>
 
+	
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
 	<mvc:annotation-driven />

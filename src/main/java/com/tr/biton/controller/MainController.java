@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.attribute.standard.PagesPerMinuteColor;
+
 @Controller
 public class MainController{
 	
@@ -68,31 +70,59 @@ public class MainController{
 		return "WelcomePage";
 	}
 	
+	private Map<String, Integer> pagi(	
+							Integer pageid, 
+							Integer pagesize,
+							Integer pagecount,
+							Integer itemscount){
+		
+		Integer pageid_loc,pagesize_loc,pagecount_loc,itemscount_loc;
+		
+		Map<String, Integer> pagi = new HashMap<String, Integer>();
+		
+		//Integer itemscount=0;
+		if (pagesize==null)	pagesize_loc= 10;
+		else pagesize_loc = pagesize;
+		if (pageid==null)	pageid_loc=1;
+		else pageid_loc = pageid;
+		if ((pagecount==null) || (itemscount==null)){
+			itemscount =  (Integer)locationservice.getLocations_count().intValue();
+			pagecount = (itemscount/pagesize_loc);
+			if  ((itemscount%pagesize_loc)!=0){
+				pagecount++;
+			}
+		}else{
+			
+		}
+		pagecount_loc = pagecount;
+		itemscount_loc = itemscount;
+		while (pageid_loc>pagecount_loc){
+			pageid_loc--;
+		}
+		if (pageid_loc<1) pageid_loc=1;
+		
+		
+		pagi.put("page", pageid_loc);
+		pagi.put("pagesize", pagesize_loc);
+		
+		pagi.put("itemscount", itemscount_loc);
+		pagi.put("pagescount", pagecount_loc); 
+		return pagi;
+		
+	}
+	
 	@RequestMapping(value="/locations")
 	public ModelAndView locs(	@RequestParam(value="page", required=false) Integer page,
 								@RequestParam(value="pagesize", required=false) Integer pagesize,
-								@RequestParam(value="pagecount", required=false) Integer pagecount) {
+								@RequestParam(value="pagescount", required=false) Integer pagecount,
+								@RequestParam(value="itemscount", required=false) Integer itemscount) {
 		
 		
 		ModelAndView model = new ModelAndView("locations");
-		Map<String, Long> pagination = new HashMap<String, Long>();
-		
-		Long itemscount=(long)0;
-		if (pagesize==null)	pagesize= 10;
-		if (page==null)	page=1;
-		if (pagecount==null){
-			itemscount =  locationservice.getLocations_count();
-			pagecount = (int) (itemscount/pagesize);
-			if  ((itemscount%pagesize)!=0){
-				pagecount++;
-			}
-		}
-		while (page>pagecount){
-			page--;
-		}
-		List<Location> locs = locationservice.getLocations(pagesize*(page-1), pagesize);
-		
+		Map<String, Integer> m = pagi(page,pagesize,pagecount,itemscount);
+		List<Location> locs = locationservice.getLocations(m.get("pagesize")*(m.get("page")-1), m.get("pagesize"));
 		model.addObject("locs", locs);
+		model.addAllObjects(m);
 		
 		return model;
 	}

@@ -11,7 +11,9 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.wallet.Wallet;
 import com.tr.biton.app.BitCoin;
+import com.tr.biton.app.CountLisener;
 import com.tr.biton.app.EscrowContractExtention;
+import com.tr.biton.app.Pagination;
 import com.tr.biton.model.MainModel;
 import com.tr.biton.orm.Location;
 import com.tr.biton.service.LocationService;
@@ -85,28 +87,29 @@ public class MainController{
 		else pagesize_loc = pagesize;
 		if (pageid==null)	pageid_loc=1;
 		else pageid_loc = pageid;
-		if ((pagecount==null) || (itemscount==null)){
-			itemscount =  (Integer)locationservice.getLocations_count().intValue();
-			pagecount = (itemscount/pagesize_loc);
-			if  ((itemscount%pagesize_loc)!=0){
-				pagecount++;
+		if (itemscount==null){
+			itemscount_loc =  (Integer)locationservice.getLocations_count().intValue();
+		}else
+			itemscount_loc = itemscount;
+		
+		if ((pagecount==null)){
+			
+			pagecount_loc = (itemscount_loc/pagesize_loc);
+			if  ((itemscount_loc%pagesize_loc)!=0){
+				pagecount_loc++;
 			}
 		}else{
+			pagecount_loc = pagecount;
 			
 		}
-		pagecount_loc = pagecount;
-		itemscount_loc = itemscount;
+		//itemscount_loc = itemscount;
+		
 		while (pageid_loc>pagecount_loc){
 			pageid_loc--;
 		}
-		if (pageid_loc<1) pageid_loc=1;
+		if (pageid_loc<2) pageid_loc=1;
 		
 		
-		pagi.put("page", pageid_loc);
-		pagi.put("pagesize", pagesize_loc);
-		
-		pagi.put("itemscount", itemscount_loc);
-		pagi.put("pagescount", pagecount_loc); 
 		return pagi;
 		
 	}
@@ -119,10 +122,16 @@ public class MainController{
 		
 		
 		ModelAndView model = new ModelAndView("locations");
-		Map<String, Integer> m = pagi(page,pagesize,pagecount,itemscount);
-		List<Location> locs = locationservice.getLocations(m.get("pagesize")*(m.get("page")-1), m.get("pagesize"));
+		Pagination pag = new Pagination(page, pagesize, pagecount, itemscount, new CountLisener() {
+			@Override
+			public Integer getCount() {
+				// TODO Auto-generated method stub
+				return (Integer)locationservice.getLocations_count().intValue();
+			}
+		});
+		List<Location> locs = locationservice.getLocations(pag.getPagesize()*(pag.getPageid()-1), pag.getPagesize());
 		model.addObject("locs", locs);
-		model.addAllObjects(m);
+		model.addAllObjects(pag.getPagi());
 		
 		return model;
 	}

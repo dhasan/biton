@@ -1,6 +1,7 @@
 package com.tr.biton.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.TypedQuery;
 
@@ -26,12 +27,12 @@ public class LocationDAOImpl implements LocationDAO{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Location> getLocations(int first, int count) {
+	public List<Location> getLocations(Integer start, Integer count, Map<String, Object> args) {
 		Session session = sessionFactory.getCurrentSession();
 		
 		String hql = "from Location";
 		TypedQuery<Location> query = session.createQuery(hql);
-		query.setFirstResult(first);
+		query.setFirstResult(start);
 		query.setMaxResults(count);
 		List<Location> list = query.getResultList();
 		//session.flush();
@@ -42,7 +43,7 @@ public class LocationDAOImpl implements LocationDAO{
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Long getLocations_count() {
+	public Long getLocations_count(Map<String, Object> args) {
 		Session session = sessionFactory.getCurrentSession();
 		
 		String hql = "SELECT COUNT(*) from Location";

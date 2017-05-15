@@ -1,6 +1,7 @@
 package com.tr.biton.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +16,15 @@ public class LocationServiceImpl implements LocationService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public List<Location> getLocations(int first, int count) {
-		return locationDAO.getLocations(first,count);
+	public List<Location> getLocations(Integer start, Integer count, Map<String, Object> args) {
+		return locationDAO.getLocations(start,count,args);
 		
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Long getLocations_count(){
-		return locationDAO.getLocations_count();
+	public Long getLocations_count(Map args){
+		return locationDAO.getLocations_count(args);
 	}
 
 	public LocationDAO getLocationDAO() {

@@ -61,6 +61,9 @@ public class Product {
 			joinColumns=@JoinColumn(name = "product_id", columnDefinition="mediumblob"))
 	private List<Blob> images;
 
+	@Lob
+	@Column(name="thumbimage", columnDefinition="mediumblob")
+	private Blob thumbimage;
 	
 	@Column(name="singleprice")
 	private long singleprice;
@@ -77,11 +80,41 @@ public class Product {
 	private Map<Double, Parcel> parcels;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="category_id")
-	private Category category;
+	@JoinColumn(name="subcategory_id")
+	private Subcategory subcategory;
+	
+	@Column(name="isused")
+	private boolean used;
+	
+	@Column(name="brandname")
+	private String brandname;
 	
 	
 	
+	public String getBrandname() {
+		return brandname;
+	}
+
+	public void setBrandname(String brandname) {
+		this.brandname = brandname;
+	}
+
+	public Blob getThumbimage() {
+		return thumbimage;
+	}
+
+	public void setThumbimage(Blob thumbimage) {
+		this.thumbimage = thumbimage;
+	}
+
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
+	}
+
 	public Map<Double, Parcel> getParcels() {
 		return parcels;
 	}
@@ -90,12 +123,12 @@ public class Product {
 		this.parcels = parcels;
 	}
 
-	public Category getCategory() {
-		return category;
+	public Subcategory getSubcategory() {
+		return subcategory;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setSubcategory(Subcategory subcategory) {
+		this.subcategory = subcategory;
 	}
 
 	public int getId() {

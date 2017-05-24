@@ -46,8 +46,8 @@ public class User {
 	@Column(name="email", unique = true)
 	private String email;
 	
-	@Column(name="fullnames")
-	private String fullnames;
+	@Column(name="username")
+	private String username;
 	
 //	@Size(min=8)
 	@Column(name="password")
@@ -56,7 +56,7 @@ public class User {
 	          write="pgp_sym_encrypt(?, 'mySecretKey')")
 	private String password;
 	
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	@Column(name="usertype")
 	private UserType usertype;
 	
@@ -165,12 +165,12 @@ public class User {
 		this.email = email;
 	}
 
-	public String getFullnames() {
-		return fullnames;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setFullnames(String fullnames) {
-		this.fullnames = fullnames;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

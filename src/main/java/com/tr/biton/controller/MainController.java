@@ -3,6 +3,7 @@ package com.tr.biton.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.tr.biton.app.EscrowContractExtention;
 import com.tr.biton.app.Pagination;
 import com.tr.biton.model.MainModel;
 import com.tr.biton.orm.Location;
+import com.tr.biton.orm.User;
 import com.tr.biton.service.LocationService;
 import com.tr.biton.service.WalletService;
 
@@ -99,8 +101,16 @@ public class MainController{
 
 		model.addObject("data", pag.getData());
 		model.addAllObjects(pag.getPagi());
+		model.addObject("user", new User());
 		
 		return model;
+	}
+	
+	@RequestMapping(value="/userlogin")
+	public ModelAndView userlogin(@ModelAttribute("user")User userlogin, ModelMap model){
+		ModelAndView modelv = new ModelAndView("WelcomePage");
+		
+		return modelv;
 	}
 	
 	@RequestMapping(value="/", method = RequestMethod.GET)

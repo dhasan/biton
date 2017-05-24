@@ -1,7 +1,5 @@
 package com.tr.biton.orm;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,22 +7,24 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="categories")
-public class Category {
+@Table(name="subcategories")
+public class Subcategory {
 	@Id
 	@Column(name = "id" ,unique = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private	int	id;
 	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name="category_id")
+	private Category category;
+	
 	@Column(name="name")
 	private String name;
-	
-	@OneToMany(mappedBy="category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Subcategory> subcategories;
 
 	public int getId() {
 		return id;
@@ -34,6 +34,14 @@ public class Category {
 		this.id = id;
 	}
 
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -41,14 +49,7 @@ public class Category {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public List<Subcategory> getSubcategories() {
-		return subcategories;
-	}
-
-	public void setSubcategories(List<Subcategory> subcategories) {
-		this.subcategories = subcategories;
-	}
+	
 	
 	
 	

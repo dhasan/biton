@@ -176,15 +176,15 @@ public class BitCoin {
 		
 		Script redeemScript = ScriptBuilder.createRedeemScript(2, keys);
 		Script script = ScriptBuilder.createP2SHOutputScript(redeemScript);
-		logger.info("Redeem script: " + byteArrayToHex(redeemScript.getProgram()));
+		logger.info("Redeem script: " + Util.byteArrayToHex(redeemScript.getProgram()));
 		
 		Address multisig = Address.fromP2SHScript(params, script);
 			
 		logger.debug("Multisig address: " + multisig.toString());
 		contractmap.put(MULTISIG_ADDRESS, multisig.toString());
-		contractmap.put(REDEEM_SCRIPT, byteArrayToHex(redeemScript.getProgram()));
-		contractmap.put(MULTISIG_HASH160, byteArrayToHex(multisig.getHash160()));
-		contractmap.put(SCRIPT, byteArrayToHex(script.getProgram()));
+		contractmap.put(REDEEM_SCRIPT, Util.byteArrayToHex(redeemScript.getProgram()));
+		contractmap.put(MULTISIG_HASH160, Util.byteArrayToHex(multisig.getHash160()));
+		contractmap.put(SCRIPT, Util.byteArrayToHex(script.getProgram()));
 	
 		return contractmap;	
 		
@@ -221,30 +221,12 @@ public class BitCoin {
 }
 
 	
-	static public byte[] hexStringToByteArray(String s) {
-	    int len = s.length();
-	    byte[] data = new byte[len / 2];
-	    for (int i = 0; i < len; i += 2) {
-	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-	                             + Character.digit(s.charAt(i+1), 16));
-	    }
-	    return data;
-	}
-	
-	
-	static public String byteArrayToHex(byte[] a) {
-		   StringBuilder sb = new StringBuilder(a.length * 2);
-		   for(byte b: a)
-		      sb.append(String.format("%02x", b & 0xff));
-		   return sb.toString();
-	}
-	
 	public void addScriptToWallet(String script, Wallet w){
 		Context.propagate(context);
 		//Wallet dummyw = new Wallet(params);
 		
 		List<Script> scripts = new ArrayList<Script>();
-		Script sc = new Script(hexStringToByteArray(script));//, dummyw.getKeyChainSeed().getCreationTimeSeconds());
+		Script sc = new Script(Util.hexStringToByteArray(script));//, dummyw.getKeyChainSeed().getCreationTimeSeconds());
 		scripts.add(sc);
 		
 		Context.propagate(context);
@@ -255,7 +237,7 @@ public class BitCoin {
 	public void addAddressToWallet(String hash160, Wallet w){
 		Context.propagate(context);
 		
-		w.addWatchedAddress(new Address(params, hexStringToByteArray(hash160)));
+		w.addWatchedAddress(new Address(params, Util.hexStringToByteArray(hash160)));
 	}
 
 	public BitCoin(String chainfile, boolean testnet){

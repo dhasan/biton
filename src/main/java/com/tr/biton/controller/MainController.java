@@ -14,6 +14,7 @@ import org.bitcoinj.wallet.Wallet;
 import com.tr.biton.app.BitCoin;
 import com.tr.biton.app.CountLisener;
 import com.tr.biton.app.EscrowContractExtention;
+import com.tr.biton.app.PagiModel;
 import com.tr.biton.app.Pagination;
 import com.tr.biton.model.MainModel;
 import com.tr.biton.orm.Location;
@@ -25,11 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.print.attribute.standard.PagesPerMinuteColor;
+//import javax.print.attribute.standard.PagesPerMinuteColor;
 
 @Controller
 public class MainController{
@@ -76,16 +77,15 @@ public class MainController{
 	
 	
 	@RequestMapping(value="/locations")
-	public ModelAndView locs(	@RequestParam(value="page", required=false) Integer page,
-								@RequestParam(value="pagesize", required=false) Integer pagesize,
-								@RequestParam(value="pagescount", required=false) Integer pagecount,
-								@RequestParam(value="itemscount", required=false) Long itemscount) {
-		
-		
+	public ModelAndView locs(@ModelAttribute PagiModel pagimodel) {
+	
 		ModelAndView model = new ModelAndView("locations");
 		//Map<String, Object> args = new HashMap<String, Object>();
 		
-		Pagination pag = new Pagination(null, page, pagesize, pagecount, itemscount, new CountLisener() {
+		Pagination pag = new Pagination(null, 	pagimodel.getPage(), 
+												pagimodel.getPagesize(), 
+												pagimodel.getPagecount(), 
+												pagimodel.getItemscount(), new CountLisener() {
 			@Override
 			public Long getCount(Map<String,Object> args) {
 
@@ -101,16 +101,10 @@ public class MainController{
 
 		model.addObject("data", pag.getData());
 		model.addAllObjects(pag.getPagi());
-		model.addObject("user", new User());
+		model.addObject("userlogin", new User());
+		model.addObject("userregister", new User());
 		
 		return model;
-	}
-	
-	@RequestMapping(value="/userlogin")
-	public ModelAndView userlogin(@ModelAttribute("user")User userlogin, ModelMap model){
-		ModelAndView modelv = new ModelAndView("WelcomePage");
-		
-		return modelv;
 	}
 	
 	@RequestMapping(value="/", method = RequestMethod.GET)

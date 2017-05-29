@@ -19,10 +19,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnTransformer;
+
+import com.tr.biton.app.BitCoin;
+import com.tr.biton.app.Util;
 
 
 
@@ -36,6 +38,10 @@ public class User {
 		ESCROW,
 		MASTER
 	}
+	
+//	public User(){
+//		privkey = new byte[256];
+//	}
 
 	@Id
 	@Column(name = "id" ,unique = true)
@@ -50,21 +56,23 @@ public class User {
 	private String username;
 	
 //	@Size(min=8)
-	@Column(name="password")
 	@ColumnTransformer(
-	          read="pgp_sym_decrypt(name::bytea, 'mySecretKey')", 
+	          read="pgp_sym_decrypt(password, 'mySecretKey')", 
 	          write="pgp_sym_encrypt(?, 'mySecretKey')")
+	@Column(name="password"/*, columnDefinition="bytea"*/)
+	
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="usertype")
 	private UserType usertype;
 	
-	@Column(name="privkey")
+	
 	@ColumnTransformer(
-	          read="pgp_sym_decrypt(name::bytea, 'mySecretKey')", 
-	          write="pgp_sym_encrypt(?, 'mySecretKey')")
-	private byte[] privkey;
+	          read="pgp_sym_decrypt(privkey, 'mySecretKey')", 
+	          write="pgp_sym_encrypt(?, 'mySecretKey')")	
+	@Column(name="privkey" /*, columnDefinition="bytea" */)
+	private String privkey;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_order",
@@ -78,11 +86,13 @@ public class User {
 	@OneToMany(mappedBy="user",  cascade = CascadeType.ALL)
 	private List<Product> products; //for sellers
 	
-	@Column(name="localbalance")
+	
 	@ColumnTransformer(
-	          read="pgp_sym_decrypt(name::bytea, 'mySecretKey')", 
-	          write="pgp_sym_encrypt(?, 'mySecretKey')")
-	private long localbalance;
+	          read="pgp_sym_decrypt(localbalance, 'mySecretKey')", 
+	          write="pgp_sym_encrypt(?, 'mySecretKey')"
+	          )
+	@Column(name="localbalance"/*, columnDefinition="bytea"*/)
+	private String localbalance;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="location_id")
@@ -107,8 +117,33 @@ public class User {
 	
 	@Column(name="stars")
 	private double stars;
+	
+	@Column(name="active")
+	private boolean active;
+	
+	@Column(name="token") //Activation token
+	private String token;
+	
+	
+	
 
 	
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public double getStars() {
 		return stars;
 	}
@@ -188,13 +223,21 @@ public class User {
 	public void setUsertype(UserType usertype) {
 		this.usertype = usertype;
 	}
-
-	public byte[] getPrivkey() {
+	
+	public String getPrivkey() {
 		return privkey;
 	}
+	
+	public byte[] getPrivkeyAsByteArray() {
+		return Util.hexStringToByteArray(privkey);
+	}
 
-	public void setPrivkey(byte[] privkey) {
+	public void setPrivkey(String privkey) {
 		this.privkey = privkey;
+	}
+	
+	public void setPrivkeyAsByteArray(byte[] privkey) {
+		this.privkey = Util.byteArrayToHex(privkey);
 	}
 
 	public List<Order> getOrders() {
@@ -213,12 +256,20 @@ public class User {
 		this.products = products;
 	}
 
-	public long getLocalbalance() {
+	public String getLocalbalance() {
 		return localbalance;
 	}
+	
+	public long getLocalbalanceAsLong() {
+		return Util.byteArrayToLong(Util.hexStringToByteArray(localbalance));
+	}
 
-	public void setLocalbalance(long localbalance) {
+	public void setLocalbalance(String localbalance) {
 		this.localbalance = localbalance;
+	} 
+	
+	public void setLocalbalanceAsLong(long localbalance) {
+		this.localbalance = Util.byteArrayToHex(Util.longToByteArray(localbalance));
 	} 
 	
 	

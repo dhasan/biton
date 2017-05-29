@@ -147,7 +147,7 @@ public class EscrowContractExtention implements WalletExtension{
 							entry.addTransaction(tx);
 							entry.addBalance(amount);
 							
-							logger.info(BitCoin.byteArrayToHex(tx.bitcoinSerialize()));
+							logger.info(Util.byteArrayToHex(tx.bitcoinSerialize()));
 							obs = entry.getObserverbs();
 							if (obs!=null)
 								obs.Funded(adr.toString(), amount, newBalance);

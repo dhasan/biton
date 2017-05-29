@@ -37,12 +37,6 @@ public class UserServiceImpl implements UserService {
 		return userDAO.getUserById(id);
 	}
 
-	@Override
-	@Transactional
-	public User getUserbyUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	@Transactional
@@ -56,6 +50,20 @@ public class UserServiceImpl implements UserService {
 	public List<User> getUsers(Integer first, Integer count, Map<String, Object> args) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public boolean isUserExistsbyUsername(String username) {
+		// TODO Auto-generated method stub
+		return userDAO.isUserExistsbyUsername(username);
+	}
+
+	@Override
+	@Transactional
+	public boolean isUserExistsbyEmail(String email) {
+		// TODO Auto-generated method stub
+		return userDAO.isUserExistsbyEmail(email);
 	}
 	
 }

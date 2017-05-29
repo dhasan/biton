@@ -158,5 +158,18 @@ private	static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 		Session session	= this.sessionFactory.getCurrentSession();
 		u.setAddresses(addrs);
 		session.update(u);
+	}
+
+	@Override
+	public boolean isUserExistsbyEmail(String email) {
+		Session session	= this.sessionFactory.getCurrentSession();
+		logger.info("email: "+email);
+		return (!(session.createQuery("select u from User u where u.email = :email").setParameter("email", email).getResultList().isEmpty()));
+	}
+
+	@Override
+	public boolean isUserExistsbyUsername(String username) {
+		Session session	= this.sessionFactory.getCurrentSession();
+		return (!(session.createQuery("select u from User u where u.username = :username").setParameter("username", username).getResultList().isEmpty()));
 	} 
 }

@@ -57,7 +57,7 @@ public class User {
 	
 //	@Size(min=8)
 	@ColumnTransformer(
-	          read="pgp_sym_decrypt(password, 'mySecretKey')", 
+	          read="pgp_sym_decrypt(password::bytea, 'mySecretKey')", 
 	          write="pgp_sym_encrypt(?, 'mySecretKey')")
 	@Column(name="password"/*, columnDefinition="bytea"*/)
 	
@@ -69,7 +69,7 @@ public class User {
 	
 	
 	@ColumnTransformer(
-	          read="pgp_sym_decrypt(privkey, 'mySecretKey')", 
+	          read="pgp_sym_decrypt(privkey::bytea, 'mySecretKey')", 
 	          write="pgp_sym_encrypt(?, 'mySecretKey')")	
 	@Column(name="privkey" /*, columnDefinition="bytea" */)
 	private String privkey;
@@ -88,7 +88,7 @@ public class User {
 	
 	
 	@ColumnTransformer(
-	          read="pgp_sym_decrypt(localbalance, 'mySecretKey')", 
+	          read="pgp_sym_decrypt(localbalance::bytea, 'mySecretKey')", 
 	          write="pgp_sym_encrypt(?, 'mySecretKey')"
 	          )
 	@Column(name="localbalance"/*, columnDefinition="bytea"*/)

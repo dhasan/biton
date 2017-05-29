@@ -30,6 +30,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 //import javax.print.attribute.standard.PagesPerMinuteColor;
 
 @Controller
@@ -100,9 +102,16 @@ public class MainController{
 		});
 
 		model.addObject("data", pag.getData());
+	//	model.addObject("req", request);
 		model.addAllObjects(pag.getPagi());
 		model.addObject("userlogin", new User());
 		model.addObject("userregister", new User());
+//		logger.info("--------------------------------------------------------------------------------------------");
+//		logger.info("req sheme "+request.getScheme());
+//		logger.info("req servername "+request.getServerName());
+//		logger.info("req port "+request.getServerPort());
+//		logger.info("req ctx "+request.getContextPath());
+		
 		
 		return model;
 	}

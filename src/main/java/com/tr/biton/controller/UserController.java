@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tr.biton.form.UserLogin;
@@ -36,6 +38,17 @@ public class UserController {
 		return model;
 	}
 	
+	@RequestMapping(value="/verifyuserregistration/{username}/{email:.+}")
+	public @ResponseBody Integer getShopInJSON(@PathVariable(name="username") String username, @PathVariable(name="email") String email) {
+		Integer ret = 0;
+		if (userService.isUserExistsbyUsername(username))
+			return 1;
+		else if (userService.isUserExistsbyEmail(email))
+			return 2;
+		else 
+			return 0;
+	}
+	
 	@RequestMapping(value="/userregistrationaction")
 	public String userregistration(@ModelAttribute("userregister")UserRegister1 userregister){
 		//ModelAndView model = new ModelAndView("mainpage");
@@ -45,8 +58,8 @@ public class UserController {
 		user.setPassword(userregister.getPassword());
 		user.setUsertype(userregister.getUsertype());
 		user.setEmail(userregister.getEmail());
-		user.setLocalbalanceAsLong(1234);
-		logger.info("val:----------- "+user.getLocalbalanceAsLong());
+		//user.setLocalbalanceAsLong(1234);
+		//logger.info("val:----------- "+user.getLocalbalanceAsLong());
 		
 		userService.createUser(user);
 		

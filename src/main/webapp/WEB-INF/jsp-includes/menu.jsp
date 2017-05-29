@@ -150,6 +150,9 @@
 	  document.getElementById("loginform").submit();
    }    
   function registration_form_submit(){
+	  $.ajax({url: "demo_test.txt", success: function(result){
+	        $("#div1").html(result);
+	    }});
 	  document.getElementById("registrationform").submit();
   }
   </script>

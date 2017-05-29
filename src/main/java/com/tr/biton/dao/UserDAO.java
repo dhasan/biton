@@ -29,4 +29,7 @@ public interface UserDAO {
 	void addAddress(User u, Address addr);
 	void removeAddress(User u, Address addr);
 	void setAddresses(User u, List<Address> addrs);
+	
+	public boolean isUserExistsbyEmail(String email);
+	public boolean isUserExistsbyUsername(String username);
 }

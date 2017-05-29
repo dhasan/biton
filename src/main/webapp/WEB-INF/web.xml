@@ -14,7 +14,7 @@
   
   <servlet-mapping>
  	<servlet-name>mvc-dispatcher</servlet-name>
-    <url-pattern>/mvc/*</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
  <!-- 
    <context-param>
@@ -43,5 +43,10 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 -->
-
+  <jsp-config>
+      <taglib>
+          <taglib-uri>/WEB-INF/tld/Utils</taglib-uri>
+          <taglib-location>/WEB-INF/tld/Utils.tld</taglib-location>
+      </taglib>
+  </jsp-config>
 </web-app>

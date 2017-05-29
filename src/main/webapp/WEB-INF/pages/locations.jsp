@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tld/Utils" prefix="cel" %>
 <html>
 <head>
 <meta charset="utf-8">
@@ -23,7 +24,8 @@
 		</c:forEach>
 	</table>
 </c:if>
-<!-- ${requestScope['javax.servlet.forward.request_uri']} -->
+${cel:getURLWithContextPath(pageContext.request)}
+
 <c:url value="${requestScope['javax.servlet.forward.request_uri']}" var="nexturl">
 	<c:param name="page" value="${page + 1}"/>
 	<c:param name="pagescount" value="${pagescount}"/>

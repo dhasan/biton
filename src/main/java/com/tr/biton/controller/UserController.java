@@ -39,7 +39,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/verifyuserregistration/{username}/{email:.+}")
-	public @ResponseBody Integer getShopInJSON(@PathVariable(name="username") String username, @PathVariable(name="email") String email) {
+	public @ResponseBody Integer verifyuserregistration(@PathVariable(name="username") String username, @PathVariable(name="email") String email) {
 		Integer ret = 0;
 		if (userService.isUserExistsbyUsername(username))
 			return 1;
@@ -48,6 +48,25 @@ public class UserController {
 		else 
 			return 0;
 	}
+	
+	@RequestMapping(value="/verifyusername/{username}")
+	public @ResponseBody Integer verifyusername(@PathVariable(name="username") String username) {
+		Integer ret = 0;
+		if (userService.isUserExistsbyUsername(username))
+			return 1;
+		else 
+			return 0;
+	}
+	
+	@RequestMapping(value="/verifyemail/{email:.+}/wa")
+	public @ResponseBody Integer verifyemail(@PathVariable(name="email") String email) {
+		if (userService.isUserExistsbyEmail(email))
+			return 2;
+		else 
+			return 0;
+	}
+	
+	
 	
 	@RequestMapping(value="/userregistrationaction")
 	public String userregistration(@ModelAttribute("userregister")UserRegister1 userregister){

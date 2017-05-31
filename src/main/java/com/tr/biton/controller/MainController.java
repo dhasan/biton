@@ -82,37 +82,25 @@ public class MainController{
 	public ModelAndView locs(@ModelAttribute PagiModel pagimodel) {
 	
 		ModelAndView model = new ModelAndView("locations");
-		//Map<String, Object> args = new HashMap<String, Object>();
-		
 		Pagination pag = new Pagination(null, 	pagimodel.getPage(), 
 												pagimodel.getPagesize(), 
 												pagimodel.getPagecount(), 
 												pagimodel.getItemscount(), new CountLisener() {
 			@Override
 			public Long getCount(Map<String,Object> args) {
-
 				return (Long)locationservice.getLocations_count(null);
 			}
-
+			@SuppressWarnings("rawtypes")
 			@Override
 			public List getData(Integer start, Integer count, Map<String, Object> args) {
-
 				return locationservice.getLocations(start, count, null);
 			}
 		});
 
 		model.addObject("data", pag.getData());
-	//	model.addObject("req", request);
 		model.addAllObjects(pag.getPagi());
 		model.addObject("userlogin", new User());
 		model.addObject("userregister", new User());
-//		logger.info("--------------------------------------------------------------------------------------------");
-//		logger.info("req sheme "+request.getScheme());
-//		logger.info("req servername "+request.getServerName());
-//		logger.info("req port "+request.getServerPort());
-//		logger.info("req ctx "+request.getContextPath());
-		
-		
 		return model;
 	}
 	

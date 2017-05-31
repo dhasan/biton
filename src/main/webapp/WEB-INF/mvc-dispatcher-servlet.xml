@@ -118,6 +118,10 @@
 	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</bean>
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+    	<property name="useDefaultSuffixPattern" value="false" />
+	</bean>
 
 	
 	<mvc:resources mapping="/resources/**" location="/resources/" />

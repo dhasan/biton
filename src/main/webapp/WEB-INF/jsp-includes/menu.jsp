@@ -30,24 +30,26 @@
 				<h4 class="modal-title" id="registrationModalLabel">New user registration</h4>
 			</div> <!-- /.modal-header -->
 			<div class="modal-body">
-			 	<form:form method="POST" action="/mvc/userregistrationaction" modelAttribute="userregister" id="registrationform" role="form">
+			 	<form:form method="POST" action="/userregistrationaction" modelAttribute="userregister" id="registrationform" role="form">
 									
 					<div class="form-group">
 						<label for="username" class="cols-sm-2 control-label">Username</label>
+						<span id="username_span" class="text-danger"></span>
 						<div class="cols-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
-								<form:input path="username" type="text" class="form-control" name="username" id="username"  placeholder="Enter your Username"/>
+								<form:input path="username" type="text" class="form-control" name="username" id="username"  placeholder="Enter your Username" onblur="verify_username();"/>
 							</div>
 						</div>
 					</div>
 					
 					<div class="form-group">
 						<label for="email" class="cols-sm-2 control-label">Your Email</label>
+						<span id="email_span" class="text-danger"></span>
 						<div class="cols-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
-								<form:input path="email" type="text" class="form-control" name="email" id="email"  placeholder="Enter your Email"/>
+								<form:input path="email" type="text" class="form-control" name="email" id="email"  placeholder="Enter your Email" onblur="verify_email();"/>
 							</div>
 						</div>
 					</div>
@@ -70,17 +72,18 @@
 						<div class="cols-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
-								<input type="password" class="form-control" name="password" id="password"  placeholder="Enter your Password"/>
+								<input type="password" class="form-control" name="password" id="password"  placeholder="Enter your Password" onblur="verify_pass()"/>
 							</div>
 						</div>
 					</div>
 					
 					<div class="form-group">
 						<label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+						<span id="password_span" class="text-danger"></span>
 						<div class="cols-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
-								<input type="password" class="form-control" name="confirm" id="confirm"  placeholder="Confirm your Password"/>
+								<input type="password" class="form-control" name="confirm" id="confirm"  placeholder="Confirm your Password" onblur="verify_pass();"/>
 							</div>
 						</div>
 					</div>
@@ -106,7 +109,7 @@
 			</div> <!-- /.modal-header -->
 
 			<div class="modal-body">
-				<form:form method="POST" action="/mvc/userloginaction" modelAttribute="userlogin" id="loginform" role="form">
+				<form:form method="POST" action="/userloginaction" modelAttribute="userlogin" id="loginform" role="form">
 					<div class="form-group">
 						<div class="input-group">
 							<form:input path="username" type="text" class="form-control" id="uLogin" />
@@ -116,7 +119,7 @@
 
 					<div class="form-group">
 						<div class="input-group">
-							<form:input path="password" type="password" class="form-control" id="uPassword" placeholder="Password" />
+							<form:input path="password" type="password" class="form-control" id="uPassword" placeholder="Password"/>
 							<label for="uPassword" class="input-group-addon glyphicon glyphicon-lock" ></label>
 						</div> <!-- /.input-group -->
 					</div> <!-- /.form-group -->
@@ -146,13 +149,88 @@
 </div><!-- /.modal -->
 
 <script type="text/javascript">
-  function login_form_submit() {
-	  document.getElementById("loginform").submit();
-   }    
-  function registration_form_submit(){
-	  $.ajax({url: "demo_test.txt", success: function(result){
-	        $("#div1").html(result);
-	    }});
-	  document.getElementById("registrationform").submit();
-  }
+	var userverify = -1;
+	var emailverify = -1;
+	var passwordverify = -1;
+	function login_form_submit() {
+		document.getElementById("loginform").submit();
+	} 
+	
+	function validateEmail(email) {
+		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	}
+	
+	function validateUsername(uname){
+		var re = /^[a-z0-9_-]{6,15}$/;
+		return re.test(uname);
+	}
+	function validatePassword(passw){
+		var re = /^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+		return re.test(passw);
+	}
+	
+	function verify_pass(){
+		pass = $("#password").val();
+		conf = $("#confirm").val(); 
+		if (pass!=conf){
+			$('#password_span').text("Passwords doesn't match!");
+			passwordverify = 0;
+		}else{
+			if (validatePassword(pass)){
+				$('#password_span').empty();
+				userverify = 1;
+			}else{			
+				$('#password_span').text("Invalid password!");
+				passwordverify = 0;
+			}
+		}
+	}
+  
+  	function verify_username(){
+  		value = $("#username").val(); 
+  		if (validateUsername(value)){
+  			$.ajax({url: "verifyusername/"+value, success: function(result){
+				console.log("uresult: "+result);
+				if (result!=0){
+					$('#username_span').text("Username already taken!");
+					userverify = 0;
+				}else{
+					$('#username_span').empty();
+					userverify = 1;
+				}
+		
+			}});
+  		}else{
+  			$('#username_span').text("Invalid username!");
+			userverify = 0;
+  		}
+  	}
+  	
+  	function verify_email(){
+  		value = $("#email").val(); 
+  		if (validateEmail(value)){
+  			$.ajax({url: "verifyemail/"+value+"/wa", success: function(result){
+  		  		console.log("eresult: "+result);
+  		  		if (result!=0){
+  		  			$('#email_span').text("Email already exists!");
+  		  			emailverify = 0;
+  		  		}else{
+  		  			$('#email_span').empty();
+  		  			emailverify = 1;
+  		  		}
+  			}});
+  		}else{
+  			$('#email_span').text("Invalid email address!");
+  			emailverify = 0;
+  		}
+   	}
+  	
+  	function registration_form_submit(){
+  		if ((emailverify==1) && (userverify==1) && (emailverify==1)){
+    		document.getElementById("registrationform").submit();
+  		}
+  	}
+	  
+  
   </script>

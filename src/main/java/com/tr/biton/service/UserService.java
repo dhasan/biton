@@ -13,4 +13,6 @@ public interface UserService {
 	
 	public Long getUsers_count(Map<String, Object> args);
 	public List<User> getUsers(Integer first, Integer count, Map<String, Object> args);
+	public User getUserByToken(String token);
+	public void updateUser(User user);
 }

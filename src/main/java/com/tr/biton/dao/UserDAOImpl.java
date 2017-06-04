@@ -171,5 +171,13 @@ private	static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 	public boolean isUserExistsbyUsername(String username) {
 		Session session	= this.sessionFactory.getCurrentSession();
 		return (!(session.createQuery("select u from User u where u.username = :username").setParameter("username", username).getResultList().isEmpty()));
+	}
+
+	@Override
+	public User getUserByToken(String token) {
+		Session session	= this.sessionFactory.getCurrentSession();
+		User user = (User)session.createQuery("select u from User u where u.token = :token").setParameter("token", token).getSingleResult();
+		
+		return user;
 	} 
 }

@@ -8,7 +8,7 @@
   </appender>
    
   <logger name="org.bitcoinj.core" level="INFO"/>
-   
+  <logger name="org.springframework.security.saml" level="DEBUG" />
  
   <root level="debug">
     <appender-ref ref="STDOUT" />

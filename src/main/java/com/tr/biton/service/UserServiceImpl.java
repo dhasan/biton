@@ -65,5 +65,18 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userDAO.isUserExistsbyEmail(email);
 	}
+
+	@Override
+	@Transactional
+	public User getUserByToken(String token) {
+		return userDAO.getUserByToken(token);
+	}
+
+	@Override
+	@Transactional
+	public void updateUser(User user) {
+		userDAO.updateUser(user);
+		
+	}
 	
 }

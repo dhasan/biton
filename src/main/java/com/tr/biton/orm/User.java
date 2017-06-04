@@ -56,11 +56,12 @@ public class User {
 	private String username;
 	
 //	@Size(min=8)
-	@ColumnTransformer(
+	
+	/*@ColumnTransformer(
 	          read="pgp_sym_decrypt(password::bytea, 'mySecretKey')", 
 	          write="pgp_sym_encrypt(?, 'mySecretKey')")
+	          */
 	@Column(name="password"/*, columnDefinition="bytea"*/)
-	
 	private String password;
 	
 	@Enumerated(EnumType.STRING)

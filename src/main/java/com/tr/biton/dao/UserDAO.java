@@ -32,4 +32,5 @@ public interface UserDAO {
 	
 	public boolean isUserExistsbyEmail(String email);
 	public boolean isUserExistsbyUsername(String username);
+	public User getUserByToken(String token);
 }

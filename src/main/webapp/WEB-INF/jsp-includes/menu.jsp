@@ -60,8 +60,8 @@
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
 								<form:select path="usertype" type="text" class="form-control" name="usertype" id="usertype">
-									<form:option value="BUYER" label="Buyer" />
-									<form:option value="SELLER" label="Seler" />
+									<form:option value="ROLE_BUYER" label="Buyer" />
+									<form:option value="ROLE_SELLER" label="Seller" />
 								</form:select>
 							</div>
 						</div>
@@ -109,17 +109,17 @@
 			</div> <!-- /.modal-header -->
 
 			<div class="modal-body">
-				<form:form method="POST" action="/userloginaction" modelAttribute="userlogin" id="loginform" role="form">
+				<form method="POST" action="/processlogin" id="loginform" role="form">
 					<div class="form-group">
 						<div class="input-group">
-							<form:input path="username" type="text" class="form-control" id="uLogin" />
+							<input type="text" class="form-control" id="uLogin" />
 							<label for="uLogin" class="input-group-addon glyphicon glyphicon-user" ></label>
 						</div>
 					</div> <!-- /.form-group -->
 
 					<div class="form-group">
 						<div class="input-group">
-							<form:input path="password" type="password" class="form-control" id="uPassword" placeholder="Password"/>
+							<input type="password" class="form-control" id="uPassword" placeholder="Password"/>
 							<label for="uPassword" class="input-group-addon glyphicon glyphicon-lock" ></label>
 						</div> <!-- /.input-group -->
 					</div> <!-- /.form-group -->
@@ -129,7 +129,7 @@
 							<input type="checkbox"> Remember me
 						</label>
 					</div> <!-- /.checkbox -->
-				</form:form>
+				</form>
 
 			</div> <!-- /.modal-body -->
 

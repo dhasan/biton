@@ -4,6 +4,7 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -14,7 +15,9 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-4.1.xsd">
 	
 	<bean name="bitcoin" class="com.tr.biton.app.BitCoin" scope = "singleton">
 		<constructor-arg type = "java.lang.String" value = "biton"/>
@@ -119,13 +122,53 @@
 		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</bean>
 	
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-    	<property name="useDefaultSuffixPattern" value="false" />
-	</bean>
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <!-- SMTP settings -->
+    <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="dhasan333.dh@gmail.com" />
+        <property name="password" value="g5111999" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.host">smtp.gmail.com</prop>
+				<prop key="mail.smtp.port">587</prop>
+            </props>
+        </property>
 
+	</bean>
+	
+		
+	<security:http authentication-manager-ref="jdbc-auth" >
+		<security:csrf disabled="true"/>
+  		<security:intercept-url pattern="/buyer/*" access="hasAnyRole('ROLE_BUYER','ROLE_ESCROW','ROLE_MASTER')" />
+  		<security:intercept-url pattern="/seller/*" access="hasAnyRole('ROLE_SELLER','ROLE_ESCROW','ROLE_MASTER')" />
+  		<security:intercept-url pattern="/escrow/*" access="hasAnyRole('ROLE_ESCROW','ROLE_MASTER')" />
+  		<security:intercept-url pattern="/master/*" access="hasRole('ROLE_MASTER')" />
+  		<security:form-login login-page="/login" default-target-url="/index"
+  			
+  			username-parameter="username"
+  			password-parameter="password"
+  			login-processing-url="/processlogin"
+  			authentication-failure-url="/fail2login" />
+  		<security:logout logout-success-url="/" />
+ 		
+ 	</security:http>
+ 	
+	
+    <security:authentication-manager id="jdbc-auth">
+    	
+   		<security:authentication-provider>
+         		
+    		<security:jdbc-user-service data-source-ref="dataSource"  
+      			users-by-username-query="select username, password, active from users where username=?" 
+          		authorities-by-username-query="select username, usertype from users where username=?  "/>
+   		</security:authentication-provider>
+ 	</security:authentication-manager>
 	
 	<mvc:resources mapping="/resources/**" location="/resources/" />
-
 	<mvc:annotation-driven />
 
 </beans>

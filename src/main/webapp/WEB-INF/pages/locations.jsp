@@ -24,8 +24,6 @@
 		</c:forEach>
 	</table>
 </c:if>
-${cel:getURLWithContextPath(pageContext.request)}
-
 <c:url value="${requestScope['javax.servlet.forward.request_uri']}" var="nexturl">
 	<c:param name="page" value="${page + 1}"/>
 	<c:param name="pagescount" value="${pagescount}"/>

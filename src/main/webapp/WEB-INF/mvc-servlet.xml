@@ -161,12 +161,17 @@
     <security:authentication-manager id="jdbc-auth">
     	
    		<security:authentication-provider>
-         		
+         	<security:password-encoder ref="bcryptEncoder"/>
     		<security:jdbc-user-service data-source-ref="dataSource"  
       			users-by-username-query="select username, password, active from users where username=?" 
           		authorities-by-username-query="select username, usertype from users where username=?  "/>
    		</security:authentication-provider>
  	</security:authentication-manager>
+ 	
+ 	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+    	<constructor-arg value="256"/>
+ 	</bean>
+ 	<bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	<mvc:annotation-driven />

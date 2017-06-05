@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -108,14 +109,14 @@ public class UserController {
 		return model;
 	}
 	
-	@RequestMapping(value="/userregistrationaction")
+	@RequestMapping(value="/userregistrationaction", method = RequestMethod.POST)
 	public String userregistration(@ModelAttribute("userregister")UserRegister1 userregister, HttpServletRequest request){
 		
 		User user = new User();
 		String token;
-		//BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setUsername(userregister.getUsername());
-		user.setPassword(/*passwordEncoder.encode(*/userregister.getPassword())/*)*/;
+		user.setPassword(passwordEncoder.encode(userregister.getPassword()));
 		user.setUsertype(userregister.getUsertype());
 		user.setEmail(userregister.getEmail());
 		user.setActive(false);

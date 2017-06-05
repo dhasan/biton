@@ -2,9 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
 
+<!-- 
 <security:authorize access="isAuthenticated()">
     authenticated as <security:authentication property="principal.username" /> 
 </security:authorize>
+-->
 
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
@@ -35,7 +37,8 @@
 				<h4 class="modal-title" id="registrationModalLabel">New user registration</h4>
 			</div> <!-- /.modal-header -->
 			<div class="modal-body">
-			 	<form:form method="POST" action="/userregistrationaction" modelAttribute="userregister" id="registrationform" role="form">
+				<c:url value="/userregistrationaction" var="userregistrationactionurl"/>
+			 	<form:form method="POST" action="${userregistrationactionurl}" modelAttribute="userregister" id="registrationform" role="form">
 									
 					<div class="form-group">
 						<label for="username" class="cols-sm-2 control-label">Username</label>
@@ -65,8 +68,8 @@
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
 								<form:select path="usertype" type="text" class="form-control" name="usertype" id="usertype">
-									<form:option value="ROLE_BUYER" label="Buyer" />
-									<form:option value="ROLE_SELLER" label="Seller" />
+									<form:option value="ROLE_BUYER">Buyer</form:option>
+									<form:option value="ROLE_SELLER">Seller</form:option>
 								</form:select>
 							</div>
 						</div>

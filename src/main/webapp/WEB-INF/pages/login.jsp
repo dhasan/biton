@@ -18,7 +18,8 @@
 <div class="container">
 <div class="row">
 
-<div class="col-sm-6">
+<div class="col-sm-4 col-md-4 col-lg-4"></div>
+<div class="col-sm-4 col-md-4 col-lg-4">
 <form method="POST" action="/processlogin" id="loginform" role="form">
 	<div class="form-group">
 		<div class="input-group">
@@ -45,6 +46,7 @@
 	</div>
 </form>
 </div> <!-- col -->
+<div class="col-sm-4 col-md-4 col-lg-4"></div>
 </div> <!-- row div -->
 </div> <!-- container div -->	
 </body>

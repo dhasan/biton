@@ -9,6 +9,9 @@
    
   <logger name="org.bitcoinj.core" level="INFO"/>
   <logger name="org.springframework.security.saml" level="DEBUG" />
+  <logger name="org.springframework.web">
+    <level value="DEBUG" />
+</logger>
  
   <root level="debug">
     <appender-ref ref="STDOUT" />

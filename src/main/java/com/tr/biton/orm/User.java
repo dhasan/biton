@@ -33,10 +33,10 @@ import com.tr.biton.app.Util;
 public class User {
 	
 	public enum UserType {
-		BUYER,
-		SELLER,
-		ESCROW,
-		MASTER
+		ROLE_BUYER,
+		ROLE_SELLER,
+		ROLE_ESCROW,
+		ROLE_MASTER
 	}
 	
 //	public User(){

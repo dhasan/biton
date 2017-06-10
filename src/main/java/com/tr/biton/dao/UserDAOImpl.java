@@ -119,48 +119,6 @@ private	static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 	}
 	
 	@Override
-	public void addCarrier(User u, String carrier){
-		Session	session	= this.sessionFactory.getCurrentSession();
-		u.getCarriernames().add(carrier);
-		session.update(u);
-	}
-	
-	@Override
-	public void removeCarrier(User u, String carrier){
-		Session	session	= this.sessionFactory.getCurrentSession();
-		u.getCarriernames().remove(carrier);
-		session.update(u);
-	}
-	
-	@Override
-	public void setCarriers(User u, Set<String> carriers){
-		Session	session	= this.sessionFactory.getCurrentSession();
-		u.setCarriernames(carriers);
-		session.update(u);
-	} 
-	
-	@Override
-	public void addAddress(User u, Address addr){
-		Session session	= this.sessionFactory.getCurrentSession();
-		u.getAddresses().add(addr);
-		session.update(u);
-	}
-	
-	@Override
-	public void removeAddress(User u, Address addr){
-		Session session	= this.sessionFactory.getCurrentSession();
-		u.getAddresses().remove(addr);
-		session.update(u);
-	}
-	
-	@Override
-	public void setAddresses(User u, List<Address> addrs){
-		Session session	= this.sessionFactory.getCurrentSession();
-		u.setAddresses(addrs);
-		session.update(u);
-	}
-
-	@Override
 	public boolean isUserExistsbyEmail(String email) {
 		Session session	= this.sessionFactory.getCurrentSession();
 		logger.info("email: "+email);
@@ -179,5 +137,13 @@ private	static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 		User user = (User)session.createQuery("select u from User u where u.token = :token").setParameter("token", token).getSingleResult();
 		
 		return user;
+	}
+
+	@Override
+	public void detach(User user) {
+		// TODO Auto-generated method stub
+		Session session	= this.sessionFactory.getCurrentSession();
+		session.detach(user);
+		
 	} 
 }

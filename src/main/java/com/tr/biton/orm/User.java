@@ -19,6 +19,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnTransformer;
@@ -108,13 +109,16 @@ public class User {
 	})
 	private Set<Location> shipsto;
 	
-	@ElementCollection(fetch = FetchType.LAZY)
-	@CollectionTable(name = "user_carriernames")
-	private Set<String> carriernames;
+//	@ElementCollection(fetch = FetchType.LAZY)
+//	@CollectionTable(name = "user_carriernames")
+//	private List<String> carriernames;
+	
+	@OneToOne(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private CargoAgency cargoagency;
 	
 	
-	@OneToMany(mappedBy="user", fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
-	private List<Address> addresses;
+	@OneToOne(mappedBy="user", fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
+	private Address address;
 	
 	@Column(name="stars")
 	private double stars;
@@ -152,13 +156,14 @@ public class User {
 	public void setStars(double stars) {
 		this.stars = stars;
 	}
+	
 
-	public List<Address> getAddresses() {
-		return addresses;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public Location getLocation() {
@@ -177,12 +182,14 @@ public class User {
 		this.shipsto = shipsto;
 	}
 
-	public Set<String> getCarriernames() {
-		return carriernames;
+	
+
+	public CargoAgency getCargoagency() {
+		return cargoagency;
 	}
 
-	public void setCarriernames(Set<String> carriernames) {
-		this.carriernames = carriernames;
+	public void setCargoagency(CargoAgency cargoagency) {
+		this.cargoagency = cargoagency;
 	}
 
 	public int getId() {

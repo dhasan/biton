@@ -15,4 +15,5 @@ public interface UserService {
 	public List<User> getUsers(Integer first, Integer count, Map<String, Object> args);
 	public User getUserByToken(String token);
 	public void updateUser(User user);
+	public void detach(User user);
 }

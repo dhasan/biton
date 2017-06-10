@@ -26,8 +26,10 @@ import com.tr.biton.app.ELUtils;
 import com.tr.biton.app.Util;
 import com.tr.biton.form.UserLogin;
 import com.tr.biton.form.UserRegister1;
-
+import com.tr.biton.orm.Address;
+import com.tr.biton.orm.CargoAgency;
 import com.tr.biton.orm.User;
+import com.tr.biton.orm.User.UserType;
 import com.tr.biton.service.UserService;
 
 @Controller
@@ -88,16 +90,30 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/useractivate/{token}")
-	public String useractivate(@PathVariable(name="token") String token){
+	public ModelAndView useractivate(@PathVariable(name="token") String token){
+		ModelAndView model;// = new ModelAndView("userregister2");
 		
 		User user = userService.getUserByToken(token);
-		if (user==null){
-			//error
+		user.setActive(true);
+		userService.updateUser(user);
+		userService.detach(user);
+		
+		Address address = new Address();
+		user.setAddress(address);
+		
+		if (user.getUsertype()==UserType.ROLE_BUYER){
+			model = new ModelAndView("buyerregister");
+		}else if (user.getUsertype()==UserType.ROLE_SELLER){
+			model = new ModelAndView("sellerregister");
+			CargoAgency  ca = new CargoAgency();
+			user.setCargoagency(ca);
 		}else{
-			user.setActive(true);
-			userService.updateUser(user);
+			//This should not happen
+			model = new ModelAndView();
 		}
-		return "redirect:/";
+		
+		model.addObject("user", user);
+		return model;
 	}
 	
 	@RequestMapping(value="/login")

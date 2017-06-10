@@ -1,7 +1,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- 
 <security:authorize access="isAuthenticated()">
     authenticated as <security:authentication property="principal.username" /> 
@@ -33,15 +34,15 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h4 class="modal-title" id="registrationModalLabel">New user registration</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
+				<h4 class="modal-title" id="registrationModalLabel"><spring:message code="label.newuserregistration"/></h4>
 			</div> <!-- /.modal-header -->
 			<div class="modal-body">
 				<c:url value="/userregistrationaction" var="userregistrationactionurl"/>
 			 	<form:form method="POST" action="${userregistrationactionurl}" modelAttribute="userregister" id="registrationform" role="form">
 									
 					<div class="form-group">
-						<label for="username" class="cols-sm-2 control-label">Username</label>
+						<label for="username" class="cols-sm-2 control-label"><spring:message code="label.username" /></label>
 						<span id="username_span" class="text-danger"></span>
 						<div class="cols-sm-10">
 							<div class="input-group">
@@ -52,7 +53,7 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="email" class="cols-sm-2 control-label">Your Email</label>
+						<label for="email" class="cols-sm-2 control-label"><spring:message code="label.email" /></label>
 						<span id="email_span" class="text-danger"></span>
 						<div class="cols-sm-10">
 							<div class="input-group">
@@ -63,20 +64,20 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="usertype" class="cols-sm-2 control-label">User Type</label>
+						<label for="usertype" class="cols-sm-2 control-label"><spring:message code="label.usertype" /></label>
 						<div class="cols-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
 								<form:select path="usertype" type="text" class="form-control" name="usertype" id="usertype">
-									<form:option value="ROLE_BUYER">Buyer</form:option>
-									<form:option value="ROLE_SELLER">Seller</form:option>
+									<form:option value="ROLE_BUYER"><spring:message code="label.usertype.buyer" /></form:option>
+									<form:option value="ROLE_SELLER"><spring:message code="label.usertype.seller" /></form:option>
 								</form:select>
 							</div>
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label for="password" class="cols-sm-2 control-label">Password</label>
+						<label for="password" class="cols-sm-2 control-label"><spring:message code="label.password"/></label>
 						<div class="cols-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
@@ -86,7 +87,7 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+						<label for="confirm" class="cols-sm-2 control-label"><spring:message code="label.confirmpassword"/></label>
 						<span id="password_span" class="text-danger"></span>
 						<div class="cols-sm-10">
 							<div class="input-group">
@@ -99,7 +100,7 @@
 				</form:form>
 			</div>
 			<div class="modal-footer">
-				<button onclick="registration_form_submit()" class="form-control btn btn-primary" type="submit" value="Submit">Register</button>
+				<button onclick="registration_form_submit()" class="form-control btn btn-primary" type="submit" value="Submit"><spring:message code="label.register"/></button>
 			
 			</div>
 			
@@ -112,7 +113,7 @@
 		<div class="modal-content">
 
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
 				<h4 class="modal-title" id="loginModalLabel">Log in</h4>
 			</div> <!-- /.modal-header -->
 

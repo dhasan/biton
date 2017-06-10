@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tld/Utils" prefix="cel" %>
 <html>
@@ -10,6 +11,7 @@
 </head>
 
 <body>
+şiğü
 <jsp:include page="../jsp-includes/menu.jsp"/>
 <div class="container-fluid">
 <div class="row">

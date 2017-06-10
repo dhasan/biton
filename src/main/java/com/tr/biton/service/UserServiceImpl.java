@@ -78,5 +78,12 @@ public class UserServiceImpl implements UserService {
 		userDAO.updateUser(user);
 		
 	}
+
+	@Override
+	@Transactional
+	public void detach(User user) {
+		userDAO.detach(user);
+		
+	}
 	
 }

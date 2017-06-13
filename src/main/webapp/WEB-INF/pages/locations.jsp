@@ -11,7 +11,6 @@
 </head>
 
 <body>
-şiğü
 <jsp:include page="../jsp-includes/menu.jsp"/>
 <div class="container-fluid">
 <div class="row">

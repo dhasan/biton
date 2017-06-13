@@ -8,7 +8,6 @@
     authenticated as <security:authentication property="principal.username" /> 
 </security:authorize>
 -->
-
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
 	<div class="row">
@@ -22,9 +21,26 @@
 			<li><a href="#">Sporting Goods</a></li>
 			<li><a href="#">Motors</a></li>
 		</ul>
+
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="" data-toggle="modal" data-target="#registrationModal"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 			<li><a href="" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li>
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      					<img src="<c:url value="/resources/images/smflags/${pageContext.response.locale}.png"/>">&#160;<spring:message code="label.localization.name"/>
+            			<span class="glyphicon glyphicon-chevron-down"></span>
+    				</button>
+    				<ul class="dropdown-menu">
+    					<li>
+        					<a href="?locale=en" title="Select this card"><img src="<c:url value="/resources/images/smflags/en.png"/>">&#160;English</a>
+      					</li>
+    					<li>
+        					<a href="?locale=tr" title="Select this card"><img src="<c:url value="/resources/images/smflags/tr.png"/>">&#160;Türkçe</a>
+      					</li>
+    				</ul>
+				</div>
+			</li>
 		</ul>
 	</div>
 	</div></div>
